@@ -312,35 +312,35 @@ _get_dir:
     jmp .neenkriptovan
 
   .enkriptovan:
-    mov [di], 't'
+    mov byte [di], 't'
     inc di
-    mov [di], 'r'
+    mov byte [di], 'r'
     inc di
-    mov [di], 'u'
+    mov byte [di], 'u'
     inc di
-    mov [di], 'e'
+    mov byte [di], 'e'
     inc di
-    mov [di], ' '
+    mov byte [di], ' '
     inc di
-    mov [di], ' '
+    mov byte [di], ' '
     inc di
 
     jmp .DodajVelicina
 
   .neenkriptovan:
-    mov [di], 'f'
+    mov byte [di], 'f'
   	inc di
-  	mov [di], 'a'
+  	mov byte [di], 'a'
   	inc di
-  	mov [di], 'l'
+  	mov byte [di], 'l'
   	inc di
-  	mov [di], 's'
+  	mov byte [di], 's'
   	inc di
-  	mov [di], 'e'
+  	mov byte [di], 'e'
   	inc di
-  	mov [di], ' '
+  	mov byte [di], ' '
   	inc di
-  	mov [di], ' '
+  	mov byte [di], ' '
   	inc di
 
 
