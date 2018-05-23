@@ -306,10 +306,9 @@ _get_dir:
 		inc     di
 
 .DodajEnkriptovan:
-    push al ; cuvamo al
-    mov al, [si+13] ; u al smestamo bajt iz 0ch atributa
-    test al, 01h ; pitamo da li je enkriptovan
-    jnz near .enkriptovan ; maska je 00000001b, tj 01h, i ukoliko je taj najnizi bit setovan, onda jeste enkriptovan
+    mov al, [si+12] ; u al smestamo bajt iz 0ch atributa
+    test al, 01h ; maska je 00000001b, tj 01h, i ukoliko je taj najnizi bit setovan, onda jeste enkriptovan
+    jnz near .enkriptovan
     jmp .neenkriptovan
 
   .enkriptovan:
@@ -344,7 +343,7 @@ _get_dir:
   	mov [di], ' '
   	inc di
 
-    
+
 .DodajVelicina
 		mov     si, dx
 		add     si, 30                      ; Uzimamo vrednost velicine iz FAT tabele posto je ona
