@@ -420,15 +420,22 @@ _encrypt_file:
   mov di, DiskBafer ; smesta podatke trenutnog direktorijuma u di
   call NadjiDirStavku ; trazi stavku sa imenom u ax
   mov al, [di+12] ; postavlja u al vrednost 0ch atributa
+  test al, 01h
+  jnz .vec_enkriptovan
   or al, 00000001b ; postavlja najnizi bit od 0ch na 1
   mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
   call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
-
-ret
-
+  ret
 
 
+  .vec_enkriptovan:
+    mov si, vec_enkriptovan_string
+    call _print_string
+  ret
 
+
+
+  vec_enkriptovan_string db 'Ovaj fajl je vec enkriptovan!', 0
 ;-------------------------------------------------------------
 ; _decrypt_file - Dekriptovanje fajla
 ; fajl se dekriptuje tako sto se pozove decrypt komanda nad odredjenim fajlom
@@ -440,13 +447,20 @@ _decrypt_file:
   mov di, DiskBafer
   call NadjiDirStavku
   mov al, [di+12]
+  test al, 01h
+  jz .vec_dekriptovan
+
   and al, 11111110b
   mov [di+12], al
   call UpisiCurrentFolder
-  
-ret
+  ret
 
+  .vec_dekriptovan:
+  mov si, vec_dekriptovan_string
+  call _print_string
+  ret
 
+  vec_dekriptovan_string db 'Ovaj fajl je vec dekriptovan!', 0
 ;-------------------------------------------------------------
 ; _change_attrib -- Izmena attributa datoteke
 ; Atributi se setuju komandom +R/S/H aresetuju komandom -R/S/H

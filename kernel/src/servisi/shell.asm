@@ -59,7 +59,7 @@ Ispisi_verziju:
 
         ;--------------------------------------------
         ; parsira cipher.key
-        
+
         mov ax, key_file_name
         mov cx, key_file_placeholder
         call _load_file ; cita sadrzaj fajla sa imenom key_file_name u key_file_placeholder
@@ -836,10 +836,6 @@ encrypt_file:
     jc .NePostoji
 
     call _encrypt_file
-
-    mov si, debug_encrypt_string
-    call _print_string
-
     jmp Komanda
 
 .NePostoji:
@@ -848,7 +844,6 @@ encrypt_file:
     jmp     Komanda
 
 
-    debug_encrypt_string    db 'Pozvali ste encrypt komandu!', 0
 ; ------------------------------------------------------------------
 decrypt_file:
   mov si, input
@@ -866,10 +861,6 @@ decrypt_file:
   jc .NePostoji
 
   call _decrypt_file
-
-  mov si, debug_decrypt_string
-  call _print_string
-
   jmp Komanda
 
 .NePostoji:
@@ -877,7 +868,6 @@ decrypt_file:
   call _print_string
   jmp Komanda
 
-  debug_decrypt_string db 'Pozvali ste decrypt komandu!', 0
 ; ------------------------------------------------------------------
 make_dir:
 		mov 	si, input
