@@ -306,6 +306,7 @@ _get_dir:
 		inc     di
 
 .DodajEnkriptovan:
+    mov si, dx
     mov al, [si+12] ; u al smestamo bajt iz 0ch atributa
     test al, 01h ; maska je 00000001b, tj 01h, i ukoliko je taj najnizi bit setovan, onda jeste enkriptovan
     jnz near .enkriptovan
@@ -413,6 +414,15 @@ _get_dir:
 ; fajl se enkriptuje tako sto se pozove encrypt komanda nad odredjenim fajlom
 ;-------------------------------------------------------------
 _encrypt_file:
+  call _string_uppercase ; pretvara ime fajla u upper case
+  call PodesiIme ; namesta ime fajla
+  call UcitajCurrentFolder ; ucitava trenutni direktorijum
+  mov di, DiskBafer ; smesta podatke trenutnog direktorijuma u di
+  call NadjiDirStavku ; trazi stavku sa imenom u ax
+  mov al, [di+12] ; postavlja u al vrednost 0ch atributa
+  or al, 00000001b ; postavlja najnizi bit od 0ch na 1
+  mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
+  call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
 
 ret
 
@@ -424,7 +434,16 @@ ret
 ; fajl se dekriptuje tako sto se pozove decrypt komanda nad odredjenim fajlom
 ;-------------------------------------------------------------
 _decrypt_file:
-  ;TODO
+  call _string_uppercase
+  call PodesiIme
+  call UcitajCurrentFolder
+  mov di, DiskBafer
+  call NadjiDirStavku
+  mov al, [di+12]
+  and al, 11111110b
+  mov [di+12], al
+  call UpisiCurrentFolder
+  
 ret
 
 

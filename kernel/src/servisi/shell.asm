@@ -157,8 +157,13 @@ Komanda:
 
         mov     di, encrypt_string
         mov     cl, 7
-        call    _string_strincmp                ; Encrypt?
+        call    _string_strincmp            ; Encrypt?
         jc near encrypt_file
+
+        mov     di, decrypt_string         ; Decrypt?
+        mov     cl, 7
+        call    _string_strincmp
+        jc near decrypt_file
 
 		mov     di, attrib_string           ; attrib?
 		mov 	cl,6
@@ -796,13 +801,63 @@ copy_file:
 
 ; ------------------------------------------------------------------
 encrypt_file:
+    mov si, input
+    call _string_parse
+    cmp bx, 0
+    jne .ZadatoIme
 
-    mov si, debug_string
+    mov si, NemaImena
+    call _print_string
+    jmp Komanda
+
+.ZadatoIme:
+    mov ax, bx
+    call _file_exists
+    jc .NePostoji
+
+    call _encrypt_file
+
+    mov si, debug_encrypt_string
     call _print_string
 
     jmp Komanda
 
-    debug_string    db 'Pozvali ste encrypt komandu!', 0
+.NePostoji:
+    mov     si, DatNePostoji            ; Izvorna datoteka ne postoji
+    call    _print_string
+    jmp     Komanda
+
+
+    debug_encrypt_string    db 'Pozvali ste encrypt komandu!', 0
+; ------------------------------------------------------------------
+decrypt_file:
+  mov si, input
+  call _string_parse
+  cmp bx, 0
+  jne .ZadatoIme
+
+  mov si, NemaImena
+  call _print_string
+  jmp Komanda
+
+.ZadatoIme:
+  mov ax, bx
+  call _file_exists
+  jc .NePostoji
+
+  call _decrypt_file
+
+  mov si, debug_decrypt_string
+  call _print_string
+
+  jmp Komanda
+
+.NePostoji:
+  mov si, DatNePostoji
+  call _print_string
+  jmp Komanda
+
+  debug_decrypt_string db 'Pozvali ste decrypt komandu!', 0
 ; ------------------------------------------------------------------
 make_dir:
 		mov 	si, input
