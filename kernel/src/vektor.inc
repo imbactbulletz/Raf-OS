@@ -6,12 +6,12 @@
 ; Aplikacioni programski interfejs (API)
 ;
 ; Vektori eksportovnaih sistemskih poziva nalaze se na statickim lokacijama.
-; Ove lokacije ne treba menjati! 
+; Ove lokacije ne treba menjati!
 ; ---------------------------------------------------------------------------
 ; Inicijalna verzija 0.0.1 (Stevan Milinkovic, 20.08.2010.)
 ; ---------------------------------------------------------------------------
 
-    jmp _main                 ; 0000h 
+    jmp _main                 ; 0000h
     jmp _print_string         ; 0003h
     jmp _move_cursor          ; 0006h
     jmp _clear_screen         ; 0009h
@@ -80,4 +80,6 @@
     jmp _run_batch            ; 00C6h
     jmp _port_byte_out        ; 00C9h
     jmp _port_byte_in         ; 00CCh
-	jmp _print_file			  ; 00CFh	
+	  jmp _print_file			      ; 00CFh
+    jmp _encrypt_file         ; 00D2h
+    jmp _decrypt_file         ; 00D5h

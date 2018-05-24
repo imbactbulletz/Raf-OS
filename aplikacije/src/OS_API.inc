@@ -6,7 +6,7 @@
 ; Aplikacioni programski interfejs (API)
 ;
 ; Vektori eksportovnaih sistemskih poziva nalaze se na statickim lokacijama.
-; Ove lokacije ne treba menjati! 
+; Ove lokacije ne treba menjati!
 ; ---------------------------------------------------------------------------
 ; Inicijalna OS verzija 0.0.1. API verzija 1 (Stevan Milinkovic, 20.08.2010.)
 ; ---------------------------------------------------------------------------
@@ -60,7 +60,7 @@ arg1            equ app_main - 080h         ; kernela i korisnika
 %define KEY_DEL     53h
 
 ; ASCII kodovi
-; Bajtovi koji mogu da se upisuju, ali ne moraju uvek da se prikazuju 
+; Bajtovi koji mogu da se upisuju, ali ne moraju uvek da se prikazuju
 
 %define KEY_ESC     27
 %define KEY_ENTER   13
@@ -77,9 +77,9 @@ arg1            equ app_main - 080h         ; kernela i korisnika
 ; koristiti softverske prekide.
 ; ====================================================================
 ; --------------------------------------------------------------------
- 
+
 ; ====================================================
-; Rutine za rad sa tekst ekranom 80x25 znakova 
+; Rutine za rad sa tekst ekranom 80x25 znakova
 ; ====================================================
 
 ; ----------------------------------------------------
@@ -94,7 +94,7 @@ arg1            equ app_main - 080h         ; kernela i korisnika
 ; Ulaz/Izlaz: -
 
 ; _print_horiz_line -- Crta horizontalnu liniju
-; Ulaz: AX = vrsta linije (1 za dvostruku (=), 
+; Ulaz: AX = vrsta linije (1 za dvostruku (=),
 ; ostale vrednosti za jednostruku (-))
 
 ; _print_newline -- Postavlja kursor na pocetak novog reda
@@ -102,16 +102,16 @@ arg1            equ app_main - 080h         ; kernela i korisnika
 
 ; _draw_background -- Brise ekran i iscrtava gore i dole bele trake,
 ; odgovarajuci tekst i obojenu radnu povrsinu.
-; Ulaz: AX = gornji string, BX = donji string, CX = boja  
+; Ulaz: AX = gornji string, BX = donji string, CX = boja
 
 ; _draw_block -- Crta blok u zadatoj boji (boja se nalazi u BL)
-; Ulaz: 
+; Ulaz:
 ;       Pocetak bloka: DH = linija, DL = kolona
-;       Sirina bloka: SI 
+;       Sirina bloka: SI
 ;       Poslenja linija bloka: DI
 
 ; _dialog_box -- Iscrtava dialog boks sa dugmetom 'OK'
-; Ulaz: AX, BX, CX = pointeri na pocetak stringova 
+; Ulaz: AX, BX, CX = pointeri na pocetak stringova
 ; Svaki string je maksimalne duzine 40 znakova
 
 ; _get_cursor_pos -- Polozaj kursora
@@ -123,7 +123,7 @@ arg1            equ app_main - 080h         ; kernela i korisnika
 ; _dump_string -- Ispisuje string kao niz hex bajtova i znakova
 ; Ulaz: SI = pointer na pocetak stringa
 
-; _print_digit -- Ispisuje sadrzaj AX kao cifru 
+; _print_digit -- Ispisuje sadrzaj AX kao cifru
 ; Radi sa osnovama do 37, tj. ciframa  0-Z
 ; Ulaz: AX = "cifra" koji treba formatirati i ispisati
 
@@ -153,24 +153,24 @@ _clear_screen       equ 0009h
 _print_horiz_line   equ 000Ch
 _print_newline      equ 000Fh
 _draw_background    equ 002Ah
-_draw_block         equ 00B4h	
-_dialog_box         equ 003Ch	                    
-_get_cursor_pos     equ 0069h	
-_print_space        equ 006Ch	
-_dump_string        equ 006Fh	
-_print_digit        equ 0072h	
-_print_1hex         equ 0075h	
-_print_2hex         equ 0078h	
-_print_4hex         equ 007Bh	
-_show_cursor        equ 008Ah	
-_hide_cursor        equ 008Dh	
-_dump_registers     equ 0090h	
+_draw_block         equ 00B4h
+_dialog_box         equ 003Ch
+_get_cursor_pos     equ 0069h
+_print_space        equ 006Ch
+_dump_string        equ 006Fh
+_print_digit        equ 0072h
+_print_1hex         equ 0075h
+_print_2hex         equ 0078h
+_print_4hex         equ 007Bh
+_show_cursor        equ 008Ah
+_hide_cursor        equ 008Dh
+_dump_registers     equ 0090h
 
 ; ====================================================
-; Rutine za rad sa tastaturom 
+; Rutine za rad sa tastaturom
 ; ====================================================
 
-; _wait_for_key -- Ceka da se pritisne taster 
+; _wait_for_key -- Ceka da se pritisne taster
 ; Ulaz: -
 ; Izlaz: AX = pritisnuti taster
 
@@ -180,8 +180,8 @@ _dump_registers     equ 0090h
 
 ; ----------------------------------------------------
 
-_wait_for_key       equ 0012h	
-_check_for_key      equ 0015h	
+_wait_for_key       equ 0012h
+_check_for_key      equ 0015h
 
 ; ====================================================
 ; Sistem datoteka FAT12 (rutine za rad sa flopi diskom)
@@ -196,7 +196,7 @@ _check_for_key      equ 0015h
 
 ; _write_file -- Snima datoteku (maksimalne velicine 64K) na disk
 ; Ulaz: AX = ime datoteke, BX = adresa podataka, CX = broj bajtova
-; Izlaz: Ukoliko ima geske, CF = 1. 
+; Izlaz: Ukoliko ima geske, CF = 1.
 
 ; _file_exists -- Poveriti da li postoji datoteka sa zadatim imenom
 ; Ulaz: AX = ime datoteke; Izlaz: CF=0, ako postoji
@@ -218,21 +218,22 @@ _check_for_key      equ 0015h
 
 ; ----------------------------------------------------
 
-_load_file          equ 0021h	
-_get_dir            equ 0042h	
-_write_file         equ 0096h	
-_file_exists        equ 0099h	
-_create_file        equ 009Ch	
-_remove_file        equ 009Fh	
-_rename_file        equ 00A2h	
-_get_file_size      equ 00A5h	
-
+_load_file          equ 0021h
+_get_dir            equ 0042h
+_write_file         equ 0096h
+_file_exists        equ 0099h
+_create_file        equ 009Ch
+_remove_file        equ 009Fh
+_rename_file        equ 00A2h
+_get_file_size      equ 00A5h
+_encrypt_file       equ 00D2h
+_decrypt_file       equ 00D5h
 ; ====================================================
 ; Rutine za rad sa zvukom
 ; ====================================================
 
 ; _speaker_tone -- Generise zvuk na ugradjenom zvucniku
-; Ulaz AX = visina (frekvencija) tona 
+; Ulaz AX = visina (frekvencija) tona
 ; Izlaz: -
 
 ; _speaker_off -- Iskljucuje zvucnik
@@ -240,8 +241,8 @@ _get_file_size      equ 00A5h
 
 ; ----------------------------------------------------
 
-_speaker_tone       equ 001Bh	
-_speaker_off        equ 001Eh	
+_speaker_tone       equ 001Bh
+_speaker_off        equ 001Eh
 
 ; ====================================================
 ; Rutine za rad sa stringovima
@@ -279,11 +280,11 @@ _speaker_off        equ 001Eh
 
 ; _string_chomp -- Odsecanje pocetnih i krajnjih 'Space' znakova
 ; Ulaz: AX = pointer na pocetak stringa
-; Broj bajtova zauzete memorije ostace isti kao i pre poziva ove rutine 
+; Broj bajtova zauzete memorije ostace isti kao i pre poziva ove rutine
 
 ; _string_strip -- Uklanja zadati znak iz stringa maksimalne duzine 255
 ; Ulaz: SI = pointer na pocetak stringa, AL = znak kojeg treba ukloniti
-; Broj bajtova zauzete memorije ostace isti kao i pre poziva ove rutine 
+; Broj bajtova zauzete memorije ostace isti kao i pre poziva ove rutine
 
 ; _string_truncate -- Odsecanje stringa sleva
 ; Ulaz: SI = pocetak stringa, AX = broj znakova koji ostaju sa leve strane
@@ -298,8 +299,8 @@ _speaker_off        equ 001Eh
 ; Ulaz: SI = pointer na pocetak stringa, AL = znak koji se trazi
 ; Izlaz: AX = prva pozicija znaka koji trazi, ili 0 ako ga nema
 
-; _long_int_to_string -- Konvertuje long int (32 bita) u string       
-; Ulaz: DX:AX = long unsigned int, BX = brojna osnova, DI = string 
+; _long_int_to_string -- Konvertuje long int (32 bita) u string
+; Ulaz: DX:AX = long unsigned int, BX = brojna osnova, DI = string
 ; Izlaz: DI = string sa koji predstavlja broj u trazenoj osnovi
 
 ; _string_strincmp -- Poredi prvih n znakova zadatih stringova
@@ -307,13 +308,13 @@ _speaker_off        equ 001Eh
 ; Izlaz: CF = 1 ako su isti, CF = 0 ako su razliciti
 
 ; _string_reverse -- Invertovati redosled znakova u stringu
-; Ulaz: SI = pointer na pocetak stringa 
+; Ulaz: SI = pointer na pocetak stringa
 ; SI pokazuje i na pocetak invertovanog stringa
 
 ; _string_to_int -- Konvertuje decimalni string u int
 ; Ulaz: SI = pocetak stringa (maksimalno 5 znakova, do '65536')
 ; Izlaz: AX = celobrojna vrednost (int)
-; Ne proverava se da si radi o broju, niti njegova velicina ! 
+; Ne proverava se da si radi o broju, niti njegova velicina !
 
 ; _string_charchange -- Zamena svake pojave znaka u stringu drugim znakom
 ; Ulaz: SI = pointer na pocetak stringa, AL = stari znak, BL = novi znak
@@ -326,33 +327,33 @@ _speaker_off        equ 001Eh
 ; (npr. "komanda arg1 agr2 arg3") i vraca pointere na odvojene stringove
 ; (npr. AX na "komanda", BX na "arg1", CX na "arg2" i DX na "arg3")
 ; Ulaz: SI = pocetni string; Izlaz: AX, BX, CX, DX = pojedinacni stringovi
-; Pointeri pokazuju na novostvorene podstringove u pocetnom stringu ! 
+; Pointeri pokazuju na novostvorene podstringove u pocetnom stringu !
 ; Zauzece memorije se ne menja.
 
 ; ----------------------------------------------------
 
-_int_to_string       equ 0018h	
-_string_length       equ 002Dh	
+_int_to_string       equ 0018h
+_string_length       equ 002Dh
 _string_uppercase    equ 0030h
 _string_lowercase    equ 0033h
-_input_string        equ 0036h 
+_input_string        equ 0036h
 _string_copy         equ 0039h
-_string_join         equ 003Fh	
-_string_compare      equ 0045h	
-_string_chomp        equ 0048h	
-_string_strip        equ 004Bh	
+_string_join         equ 003Fh
+_string_compare      equ 0045h
+_string_chomp        equ 0048h
+_string_strip        equ 004Bh
 _string_truncate     equ 004Eh
-_get_time_string     equ 0055h	
-_get_date_string     equ 005Dh	
-_find_char_in_string equ 0066h	
-_long_int_to_string  equ 007Eh	
-_string_strincmp     equ 0093h	
-_string_reverse      equ 00AEh	
-_string_to_int       equ 00B1h	
-_string_charchange   equ 00BAh	
-_sint_to_string      equ 00C0h	
-_string_parse        equ 00C3h	                  
-                    
+_get_time_string     equ 0055h
+_get_date_string     equ 005Dh
+_find_char_in_string equ 0066h
+_long_int_to_string  equ 007Eh
+_string_strincmp     equ 0093h
+_string_reverse      equ 00AEh
+_string_to_int       equ 00B1h
+_string_charchange   equ 00BAh
+_sint_to_string      equ 00C0h
+_string_parse        equ 00C3h
+
 ; ====================================================
 ; Matematicke rutine
 ; ====================================================
@@ -375,10 +376,10 @@ _string_parse        equ 00C3h
 
 ; ----------------------------------------------------
 
-_bcd_to_int         equ 0051h	
+_bcd_to_int         equ 0051h
 _long_int_negate    equ 0081h
 _seed_random        equ 005Ah
-_get_random         equ 00B7h	
+_get_random         equ 00B7h
 
 ; ====================================================
 ; Rutine za rad sa portovima
@@ -403,12 +404,12 @@ _get_random         equ 00B7h
 
 ; ----------------------------------------------------
 
-_send_via_serial    equ 0060h	
-_get_via_serial     equ 0063h	
+_send_via_serial    equ 0060h
+_get_via_serial     equ 0063h
 _serial_port_enable equ 00BDh
-_port_byte_out      equ 00C9h	
-_port_byte_in       equ 00CCh	
-	
+_port_byte_out      equ 00C9h
+_port_byte_in       equ 00CCh
+
 ; ====================================================
 ; Ostale rutine
 ; ====================================================
@@ -428,9 +429,9 @@ _port_byte_in       equ 00CCh
 
 ; ----------------------------------------------------
 
-_pause              equ 0024h	
-_fatal_error        equ 0027h		
-_get_api_version    equ 0057h	
+_pause              equ 0024h
+_fatal_error        equ 0027h
+_get_api_version    equ 0057h
 _run_batch          equ 00C6h
 
 
