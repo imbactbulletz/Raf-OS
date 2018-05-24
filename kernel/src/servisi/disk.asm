@@ -405,6 +405,29 @@ _get_dir:
 	fajl db 0
 
 
+
+
+
+;-------------------------------------------------------------
+; _encrypt_file - Enkriptovanje fajla
+; fajl se enkriptuje tako sto se pozove encrypt komanda nad odredjenim fajlom
+;-------------------------------------------------------------
+_encrypt_file:
+
+ret
+
+
+
+
+;-------------------------------------------------------------
+; _decrypt_file - Dekriptovanje fajla
+; fajl se dekriptuje tako sto se pozove decrypt komanda nad odredjenim fajlom
+;-------------------------------------------------------------
+_decrypt_file:
+  ;TODO
+ret
+
+
 ;-------------------------------------------------------------
 ; _change_attrib -- Izmena attributa datoteke
 ; Atributi se setuju komandom +R/S/H aresetuju komandom -R/S/H
