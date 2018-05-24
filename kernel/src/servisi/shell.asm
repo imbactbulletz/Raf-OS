@@ -57,6 +57,26 @@ Ispisi_verziju:
         mov     si, verzija
         call    _print_string
 
+        ;--------------------------------------------
+        ; parsira cipher.key
+        
+        mov ax, key_file_name
+        mov cx, key_file_placeholder
+        call _load_file ; cita sadrzaj fajla sa imenom key_file_name u key_file_placeholder
+
+        mov si, key_file_placeholder
+        call _string_parse ; parsira string tako da se u ax nalazi prvi kljuc, a u bx drugi
+
+        mov si, ax
+        call _string_to_int ; parsira string iz ax u integer
+        mov byte [a_key], al
+
+        mov si, bx
+        call _string_to_int ; parsira string iz bx u integer
+        mov byte [b_key], al
+
+        ;--------------------------------------------
+
 Komanda:
         mov     si, prompt                  ; Glavna petlja. Prompt za unosenje komande.
         call    _print_string
@@ -1119,3 +1139,8 @@ GreskaPisanja:                              ; Zajednicko za sve operacije koje i
 
 		PathSpace		times 256 db 0
 		temp_input		times 128 db 0
+
+    a_key db 0
+    b_key db 0
+    key_file_name db 'cipher.key', 0
+    key_file_placeholder times 7 db 0
