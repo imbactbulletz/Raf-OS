@@ -49,7 +49,7 @@ _encrypt_byte:
     ; call _print_newline
     ; mov ax, cx
 
-    sub ax, 65 ; da budemo u opsegu [0,25]
+    sub ax, 97 ; da budemo u opsegu [0,25]
 
     mov bl, al ; 'S' ; pomeramo S slovo u bl
     mov al, [a_key] ; pomeramo kljuc A u al
@@ -160,7 +160,7 @@ _decrypt_byte:
     xor bx, bx
     mov bl, ah
     mov ax, bx
-    add ax, 65
+    add ax, 97
 
     mov [temp_val], ax
     call _int_to_string
