@@ -10,18 +10,20 @@
 _encrypt_data:
   pusha
 
+  dec cx ; da ne bismo i LF karakter enkriptovali
   enc_loop:
   xor ax, ax
   mov al, [bx]
   call _encrypt_byte
   mov [bx], al
   inc bx
-  call _int_to_string
-  mov si, ax
-  call _print_string
-  call _print_newline
+  ; call _int_to_string
+  ; mov si, ax
+  ; call _print_string
+  ; call _print_newline
   loop enc_loop
 
+  mov [bx], byte  10 ; dodajemo linefeed na kraju
   popa
   ret
 ;-----------------------------
@@ -37,8 +39,14 @@ _encrypt_data:
 _encrypt_byte:
     pusha
 
+    sub ax, 64 ; oduzimamo tako da A slovo ima indeks 1
     xor bx, bx ; setujemo bx na nula
     xor dx, dx ; setujemo dx na nula
+
+    ; call _int_to_string
+    ; mov si, ax
+    ; call _print_string
+    ; call _print_newline
 
     mov bl, al ; 'S' ; pomeramo S slovo u bl
     mov al, [a_key] ; pomeramo kljuc A u al
@@ -47,17 +55,20 @@ _encrypt_byte:
     mov dl, [b_key]
     add ax, dx
 
+
     mov bl, 26
     div bl
+
+
 
     xor bx, bx
     mov bl, ah
     mov ax, bx
     mov [temp_ax_val], ax
-    ; call _int_to_string
-    ; mov si, ax
-    ; call _print_string
-
+    call _int_to_string
+    mov si, ax
+    call _print_string
+    call _print_newline
     popa
     mov ax, [temp_ax_val]
 ret
@@ -78,9 +89,31 @@ ret
 ; Izlaz: Nema. Modifikuje se postojeci niz
 ;-----------------------------
 _decrypt_data:
-  mov ax, 21
+  pusha
+
+  ;; dummy data
+  mov bx, dummy_data
+  mov cx, 6
+
+  dec_loop:
+  xor ax, ax ; isprazni ax
+  mov al, [bx] ; ucita enkriptovani karakter
   call _decrypt_byte
+  mov [bx], al ; upisuje dekriptovani karakter na mesto ekriptovanog
+  inc bx ; prelazi na sledeci karakter
+
+  call _int_to_string
+  mov si, ax
+  call _print_string
+  call _print_newline
+
+  loop dec_loop
+
+  popa
+
   ret
+
+  dummy_data db 21, 4, 25, 8, 15, 2
 ;-----------------------------
 ; Dekriptuje jedan bajt
 ; Ulaz: AL
@@ -113,15 +146,19 @@ _decrypt_byte:
     xor bx, bx
     mov bl, ah
     mov ax, bx
-    call _int_to_string
-    mov si, ax
-    call _print_string
+    add ax, 40
 
+    ; call _int_to_string
+    ; mov si, ax
+    ; call _print_string
+
+    mov [temp_val], ax
     popa
+    mov ax, [temp_val]
     ret
 
 
-
+    temp_val dw 0
 
 
 ;-----------------------------
