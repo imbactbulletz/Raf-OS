@@ -492,9 +492,9 @@ _decrypt_file:
   test al, 01h
   jz .vec_dekriptovan
 
-  and al, 11111110b
-  mov [di+12], al
-  call UpisiCurrentFolder
+  ; and al, 11111110b
+  ; mov [di+12], al
+  ; call UpisiCurrentFolder
 
   ; dec
   mov ax, [.ime_fajla_loc]
@@ -502,10 +502,32 @@ _decrypt_file:
   call _load_file
   mov [.velicina_fajla], bx
 
+  mov ax, [.ime_fajla_loc]
+  call _remove_file
+
   mov cx, [.velicina_fajla]
   mov bx, 9000h
   call _decrypt_data
   ; /dec
+
+  mov ax, [.ime_fajla_loc]
+  mov bx, 9000h
+  mov cx, [.velicina_fajla]
+  call _write_file
+
+  ;upisujemo 0ch atribut
+
+  mov [.ime_fajla_loc], ax ; cuvamo ime od fajla
+
+  call _string_uppercase ; pretvara ime fajla u upper case
+  call PodesiIme ; namesta ime fajla
+  call UcitajCurrentFolder ; ucitava trenutni direktorijum
+  mov di, DiskBafer ; smesta podatke trenutnog direktorijuma u di
+  call NadjiDirStavku ; trazi stavku sa imenom u ax
+  mov al, [di+12] ; postavlja u al vrednost 0ch atributa
+  and al, 11111110b
+  mov [di+12], al
+  call UpisiCurrentFolder
 
   ret
 
