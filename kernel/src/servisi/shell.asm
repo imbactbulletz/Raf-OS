@@ -870,6 +870,7 @@ decrypt_file:
   call _file_exists
   jc .NePostoji
 
+  mov ax, bx
   call _decrypt_file
   jmp Komanda
 

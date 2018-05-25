@@ -481,6 +481,8 @@ _encrypt_file:
 ; fajl se dekriptuje tako sto se pozove decrypt komanda nad odredjenim fajlom
 ;-------------------------------------------------------------
 _decrypt_file:
+  mov [.ime_fajla_loc], ax
+
   call _string_uppercase
   call PodesiIme
   call UcitajCurrentFolder
@@ -492,12 +494,19 @@ _decrypt_file:
 
   and al, 11111110b
   mov [di+12], al
+  call UpisiCurrentFolder
 
   ; dec
+  mov ax, [.ime_fajla_loc]
+  mov cx, 9000h
+  call _load_file
+  mov [.velicina_fajla], bx
 
+  mov cx, [.velicina_fajla]
+  mov bx, 9000h
   call _decrypt_data
   ; /dec
-  call UpisiCurrentFolder
+
   ret
 
   .vec_dekriptovan:
@@ -505,6 +514,9 @@ _decrypt_file:
   call _print_string
   ret
 
+
+  .velicina_fajla dw 0
+  .ime_fajla_loc dw 0
   vec_dekriptovan_string db 'Ovaj fajl je vec dekriptovan!', 0
 ;-------------------------------------------------------------
 ; _change_attrib -- Izmena attributa datoteke

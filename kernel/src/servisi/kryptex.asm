@@ -39,14 +39,17 @@ _encrypt_data:
 _encrypt_byte:
     pusha
 
-    sub ax, 64 ; oduzimamo tako da A slovo ima indeks 1
     xor bx, bx ; setujemo bx na nula
     xor dx, dx ; setujemo dx na nula
 
+    ; mov cx, ax
     ; call _int_to_string
     ; mov si, ax
     ; call _print_string
     ; call _print_newline
+    ; mov ax, cx
+
+    sub ax, 65 ; da budemo u opsegu [0,25]
 
     mov bl, al ; 'S' ; pomeramo S slovo u bl
     mov al, [a_key] ; pomeramo kljuc A u al
@@ -84,36 +87,40 @@ ret
 
 ;-----------------------------
 ; Dekriptuje niz podataka:
-; Ulaz CX - adresa niza koji se dekriptuje
-;      BX - duzina niza
+; Ulaz BX - adresa niza koji se dekriptuje
+;      CX - duzina niza
 ; Izlaz: Nema. Modifikuje se postojeci niz
 ;-----------------------------
 _decrypt_data:
   pusha
 
   ;; dummy data
-  mov bx, dummy_data
-  mov cx, 6
+  ; mov bx, dummy_data
+  ; mov cx, 6
+
+  dec cx ; da ne bismo i LF karakter dekriptovali
 
   dec_loop:
   xor ax, ax ; isprazni ax
   mov al, [bx] ; ucita enkriptovani karakter
+
   call _decrypt_byte
   mov [bx], al ; upisuje dekriptovani karakter na mesto ekriptovanog
   inc bx ; prelazi na sledeci karakter
 
-  call _int_to_string
-  mov si, ax
-  call _print_string
-  call _print_newline
+  ; call _int_to_string
+  ; mov si, ax
+  ; call _print_string
+  ; call _print_newline
 
   loop dec_loop
+
+  mov [bx], byte 10
 
   popa
 
   ret
 
-  dummy_data db 21, 4, 25, 8, 15, 2
 ;-----------------------------
 ; Dekriptuje jedan bajt
 ; Ulaz: AL
@@ -122,6 +129,13 @@ _decrypt_byte:
     pusha
     xor bx, bx
     xor dx, dx
+
+    ; mov cx, ax
+    ; call _int_to_string
+    ; mov si, ax
+    ; call _print_string
+    ; call _print_newline
+    ; mov ax, cx
 
     mov bl, [b_key]; ; b kljuc
 
@@ -146,13 +160,13 @@ _decrypt_byte:
     xor bx, bx
     mov bl, ah
     mov ax, bx
-    add ax, 40
-
-    ; call _int_to_string
-    ; mov si, ax
-    ; call _print_string
+    add ax, 65
 
     mov [temp_val], ax
+    call _int_to_string
+    mov si, ax
+    call _print_string
+    call _print_newline
     popa
     mov ax, [temp_val]
     ret
