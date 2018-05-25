@@ -424,6 +424,11 @@ _encrypt_file:
   jnz .vec_enkriptovan
   or al, 00000001b ; postavlja najnizi bit od 0ch na 1
   mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
+
+  ; enc
+  call _encrypt_data
+
+  ; /enc
   call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
   ret
 
