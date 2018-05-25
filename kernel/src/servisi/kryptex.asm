@@ -3,18 +3,45 @@
 
 ;-----------------------------
 ; Enkriptuje niz podataka:
-; Ulaz: CX - adresa niza koji se enkriptuje
-;       BX - duzina niza
+; Ulaz: BX - adresa niza koji se enkriptuje
+;       CX - duzina niza
 ; Izlaz : Nema. Modifikuje se postojeci niz.
+;-----------------------------
 _encrypt_data:
+  pusha
+
+  enc_loop:
+  xor ax, ax
+  mov al, [bx]
+  call _encrypt_byte
+  mov [bx], al
+  inc bx
+  call _int_to_string
+  mov si, ax
+  call _print_string
+  call _print_newline
+  loop enc_loop
+
+  popa
+  ret
+;-----------------------------
+
+
+
+
+
+;-----------------------------
+; Enkriptuje jedan bajt
+; Ulaz: AL
+; Izlaz: AL
+_encrypt_byte:
     pusha
 
-    xor ax, ax ; setujemo ax na nula
     xor bx, bx ; setujemo bx na nula
     xor dx, dx ; setujemo dx na nula
 
+    mov bl, al ; 'S' ; pomeramo S slovo u bl
     mov al, [a_key] ; pomeramo kljuc A u al
-    mov bl, 83 ; 'S' ; pomeramo S slovo u bl
     mul bl ; mnozimo, rezultat je u ax
 
     mov dl, [b_key]
@@ -26,13 +53,16 @@ _encrypt_data:
     xor bx, bx
     mov bl, ah
     mov ax, bx
-
-    call _int_to_string
-    mov si, ax
-    call _print_string
+    mov [temp_ax_val], ax
+    ; call _int_to_string
+    ; mov si, ax
+    ; call _print_string
 
     popa
+    mov ax, [temp_ax_val]
 ret
+
+  temp_ax_val dw 0
 ;-----------------------------
 
 
@@ -46,12 +76,19 @@ ret
 ; Ulaz CX - adresa niza koji se dekriptuje
 ;      BX - duzina niza
 ; Izlaz: Nema. Modifikuje se postojeci niz
+;-----------------------------
 _decrypt_data:
+  mov ax, 21
+  call _decrypt_byte
+  ret
+;-----------------------------
+; Dekriptuje jedan bajt
+; Ulaz: AL
+; Izlaz: AL
+_decrypt_byte:
     pusha
-    xor ax, ax
     xor bx, bx
     xor dx, dx
-    mov al, 21 ; c
 
     mov bl, [b_key]; ; b kljuc
 

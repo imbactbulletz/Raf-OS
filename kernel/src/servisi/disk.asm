@@ -414,6 +414,8 @@ _get_dir:
 ; fajl se enkriptuje tako sto se pozove encrypt komanda nad odredjenim fajlom
 ;-------------------------------------------------------------
 _encrypt_file:
+  mov [.ime_fajla_loc], ax ; cuvamo ime od fajla
+
   call _string_uppercase ; pretvara ime fajla u upper case
   call PodesiIme ; namesta ime fajla
   call UcitajCurrentFolder ; ucitava trenutni direktorijum
@@ -424,12 +426,45 @@ _encrypt_file:
   jnz .vec_enkriptovan
   or al, 00000001b ; postavlja najnizi bit od 0ch na 1
   mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
+  call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
+
 
   ; enc
+  mov ax, [.ime_fajla_loc]
+  mov cx, 9000h
+  call _load_file ; ucitava na 9000h
+  mov [.velicina_fajla], bx
+
+  mov ax, [.ime_fajla_loc]
+  call _remove_file ; brise fajl
+
+  mov bx, 9000h
+  mov cx, [.velicina_fajla]
+
   call _encrypt_data
 
+  mov ax, [.ime_fajla_loc]
+  mov bx, 9000h
+  mov cx, [.velicina_fajla]
+  call _write_file
+
+
   ; /enc
+
+  ; upisujemo 0ch atribut
+
+  mov [.ime_fajla_loc], ax ; cuvamo ime od fajla
+
+  call _string_uppercase ; pretvara ime fajla u upper case
+  call PodesiIme ; namesta ime fajla
+  call UcitajCurrentFolder ; ucitava trenutni direktorijum
+  mov di, DiskBafer ; smesta podatke trenutnog direktorijuma u di
+  call NadjiDirStavku ; trazi stavku sa imenom u ax
+  mov al, [di+12] ; postavlja u al vrednost 0ch atributa
+  or al, 00000001b ; postavlja najnizi bit od 0ch na 1
+  mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
   call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
+
   ret
 
 
@@ -438,8 +473,8 @@ _encrypt_file:
     call _print_string
   ret
 
-
-
+  .velicina_fajla dw 0
+  .ime_fajla_loc dw 0
   vec_enkriptovan_string db 'Ovaj fajl je vec enkriptovan!', 0
 ;-------------------------------------------------------------
 ; _decrypt_file - Dekriptovanje fajla

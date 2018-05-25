@@ -844,6 +844,7 @@ encrypt_file:
     call _file_exists
     jc .NePostoji
 
+    mov ax, bx
     call _encrypt_file
     jmp Komanda
 

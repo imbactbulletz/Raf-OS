@@ -17,7 +17,6 @@
     %define RAF_OS_API_VER 1                ; API verzija (proveravaju je aplikacije)
 
      DiskBafer equ 6000h
-
     %include "vektor.inc"
 
 _main:
