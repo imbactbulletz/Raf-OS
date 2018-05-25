@@ -457,6 +457,11 @@ _decrypt_file:
 
   and al, 11111110b
   mov [di+12], al
+
+  ; dec
+
+  call _decrypt_data
+  ; /dec
   call UpisiCurrentFolder
   ret
 
