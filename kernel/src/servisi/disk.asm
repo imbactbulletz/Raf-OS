@@ -414,6 +414,7 @@ _get_dir:
 ; fajl se enkriptuje tako sto se pozove encrypt komanda nad odredjenim fajlom
 ;-------------------------------------------------------------
 _encrypt_file:
+  pusha
   mov [.ime_fajla_loc], ax ; cuvamo ime od fajla
 
   call _string_uppercase ; pretvara ime fajla u upper case
@@ -424,9 +425,9 @@ _encrypt_file:
   mov al, [di+12] ; postavlja u al vrednost 0ch atributa
   test al, 01h
   jnz .vec_enkriptovan
-  or al, 00000001b ; postavlja najnizi bit od 0ch na 1
-  mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
-  call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
+  ; or al, 00000001b ; postavlja najnizi bit od 0ch na 1
+  ; mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
+  ; call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
 
 
   ; enc
@@ -465,13 +466,15 @@ _encrypt_file:
   mov [di+12], al ; upisuje sadrzaj al u direktorijumsku stavku
   call UpisiCurrentFolder ; upisuje sadrzaj trenutnog direktorijuma nazad
 
+  popa
   ret
 
 
   .vec_enkriptovan:
     mov si, vec_enkriptovan_string
     call _print_string
-  ret
+    popa
+    ret
 
   .velicina_fajla dw 0
   .ime_fajla_loc dw 0
@@ -481,6 +484,7 @@ _encrypt_file:
 ; fajl se dekriptuje tako sto se pozove decrypt komanda nad odredjenim fajlom
 ;-------------------------------------------------------------
 _decrypt_file:
+  pusha
   mov [.ime_fajla_loc], ax
 
   call _string_uppercase
@@ -528,12 +532,13 @@ _decrypt_file:
   and al, 11111110b
   mov [di+12], al
   call UpisiCurrentFolder
-
+  popa
   ret
 
   .vec_dekriptovan:
   mov si, vec_dekriptovan_string
   call _print_string
+  popa
   ret
 
 
@@ -652,6 +657,7 @@ _load_file:
         call    PodesiIme
         mov     [.filename], ax             ; Privremeno cuvamo ime datoteke,
         mov     [.adresa], cx               ; kao i lokaciju gde ce se ucitat.i
+        mov     [.inicijalna_adresa], cx
         call    ResetDisk                   ; U slucaju da je disketa zamenjena
         jnc    .ResetOK                     ; Da li je reset bio OK?
         mov     ax, .GreskaReseta           ; Ako nije, nesto nije u redu sa kontrolerom
@@ -714,6 +720,7 @@ _load_file:
 .NasaoDatoteku:
         mov     ax, [di+28]                 ; Sacuvacemo velicimu datoteke
         mov word [.Velicina], ax
+        mov     [.inicijalna_velicina], ax
         cmp     ax, 0                       ; Ukoliko je velicina datoteke nula,
         je     .Kraj                        ; nema potrebe ucitavati vise klastera
         mov     ax, [di+26]                 ; Ucitavamo klaster u memoriju
@@ -780,8 +787,28 @@ _load_file:
         jmp    .CitajSektor                 ; Idemo na sledeci sektor
 
 .Kraj:
+        mov ax, [.filename] ; smesta ime datoteke
+        mov     bx, [.Velicina]             ; Velicinu datoteke vracamo preko BX
+        clc
+        call _string_uppercase ; pretvara ime fajla u upper case
+        call PodesiIme ; namesta ime fajla
+        call UcitajCurrentFolder ; ucitava trenutni direktorijum
+        mov di, DiskBafer ; smesta podatke trenutnog direktorijuma u di
+        call NadjiDirStavku ; trazi stavku sa imenom u ax
+        mov al, [di+12] ; postavlja u al vrednost 0ch atributa
+        test al, 01h
+        jz .kraj_kraja
+
+        ; /dekriptuje ako je enkriptovan
+        mov bx, [.inicijalna_adresa]
+        mov cx, [.inicijalna_velicina]
+        call _decrypt_data
+
         mov     bx, [.Velicina]             ; Velicinu datoteke vracamo preko BX
         clc                                 ; CF=0, uspesno ucitavanje
+
+
+        .kraj_kraja:
         ret
 
 
@@ -790,7 +817,8 @@ _load_file:
     .adresa         dw 0                    ; Adresa od koje se vrsi ucitavanje
     .Velicina       dw 0                    ; Velicina datoteke
     .GreskaReseta   db 'Disketna jedinica ne moze da se resetuje', 0
-
+    .inicijalna_adresa dw 0
+    .inicijalna_velicina dw 0
 
 ; ----------------------------------------------------------------
 ; _load_file_current_folder -- Ucitava datoteku iz CurrentFoldera
