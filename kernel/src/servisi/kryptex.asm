@@ -129,7 +129,7 @@ _decrypt_byte:
     pusha
     xor bx, bx
     xor dx, dx
-
+    xor ah, ah
     ; mov cx, ax
     ; call _int_to_string
     ; mov si, ax
@@ -139,7 +139,7 @@ _decrypt_byte:
 
     mov bl, [b_key]; ; b kljuc
 
-    sub al, bl ; c - b
+    sub ax, bx ; c - b
 
     mov dx, ax ; privremeno cuvamo ax sadrzaj
 
@@ -149,13 +149,22 @@ _decrypt_byte:
 
 
     mov bl, al ; premestamo rezultat od inverse u bl
-    mov al, dl ; vracamo ax sadrzaj
+    mov ax, dx ; vracamo ax sadrzaj
 
-    mul bl
+    imul bl
+
+
+    cmp ax, 0
+
+    jge .dalje
+
+    add ax, 26
+
+    .dalje:
 
     mov bl, 26
 
-    div bl
+    idiv bl
 
     xor bx, bx
     mov bl, ah
